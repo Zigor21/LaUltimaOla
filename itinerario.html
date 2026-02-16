@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Itinerario · Operación Última Ola</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@1&family=Outfit:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0A1628;
+  --deep: #0F2847;
+  --ocean: #1A4A7A;
+  --teal: #00B4D8;
+  --teal-light: #48CAE4;
+  --teal-glow: rgba(0, 180, 216, 0.15);
+  --coral: #E07A5F;
+  --coral-bright: #F2946D;
+  --coral-glow: rgba(224, 122, 95, 0.2);
+  --sand: #F5DEB3;
+  --sand-light: #FFF8E7;
+  --gold: #D4A843;
+  --white: #FFFFFF;
+  --white-70: rgba(255,255,255,0.7);
+  --white-40: rgba(255,255,255,0.4);
+  --white-15: rgba(255,255,255,0.15);
+  --white-08: rgba(255,255,255,0.08);
+  --white-06: rgba(255,255,255,0.06);
+  --white-12: rgba(255,255,255,0.12);
+  --white-20: rgba(255,255,255,0.2);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+
+/* === NAV === */
+.page-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background: rgba(10, 22, 40, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--white-08);
+}
+.page-nav a {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--white-40);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--white-15);
+  transition: all 0.3s;
+}
+.page-nav a:hover {
+  color: var(--white);
+  border-color: var(--teal);
+  background: var(--white-08);
+}
+.page-nav .nav-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--coral);
+  border: none;
+  padding: 0;
+}
+.page-nav .nav-title:hover { background: none; }
+
+/* === HERO === */
+.page-hero {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px 60px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--deep) 0%, var(--navy) 100%);
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 50%, var(--teal-glow) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 80% 30%, var(--coral-glow) 0%, transparent 70%);
+}
+.page-hero-content { position: relative; z-index: 2; }
+.page-hero .label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.2s;
+}
+.page-hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: clamp(40px, 8vw, 80px);
+  line-height: 0.95;
+  letter-spacing: -2px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.4s;
+}
+.page-hero h1 span { color: var(--coral); }
+.page-hero .sub {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: clamp(16px, 3vw, 22px);
+  color: var(--sand);
+  margin-top: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.6s;
+}
+.hero-divider {
+  width: 60px;
+  height: 3px;
+  background: var(--coral);
+  margin: 28px auto 0;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.8s;
+}
+
+/* === CONTENT === */
+.content {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+
+/* === TIMELINE === */
+.timeline {
+  position: relative;
+  padding-left: 44px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--teal), var(--coral), var(--gold));
+  border-radius: 1px;
+}
+
+.tl-item {
+  position: relative;
+  margin-bottom: 32px;
+  padding: 22px 26px;
+  background: var(--white-06);
+  border: 1px solid var(--white-12);
+  border-radius: 14px;
+  transition: all 0.3s;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease, background 0.3s, border-color 0.3s;
+}
+.tl-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.tl-item:hover {
+  background: var(--white-12);
+  border-color: var(--white-20);
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -35px;
+  top: 28px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 3px solid var(--teal);
+  z-index: 1;
+}
+
+.tl-item.flight::before {
+  border-color: var(--coral);
+  box-shadow: 0 0 12px var(--coral-glow);
+}
+
+.tl-item.surf::before {
+  width: 16px;
+  height: 16px;
+  left: -37px;
+  top: 26px;
+  border-color: var(--gold);
+  background: var(--gold);
+  box-shadow: 0 0 18px rgba(212, 168, 67, 0.5);
+}
+
+.tl-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--teal-light);
+  margin-bottom: 6px;
+}
+.tl-item.flight .tl-date { color: var(--coral-bright); }
+.tl-item.surf .tl-date { color: var(--gold); }
+
+.tl-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.tl-desc {
+  font-size: 14px;
+  color: var(--white-70);
+  line-height: 1.6;
+}
+
+.flight-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  background: var(--white-08);
+  border: 1px solid var(--white-12);
+  border-radius: 8px;
+  padding: 7px 14px;
+  margin-top: 12px;
+  color: var(--white-40);
+  flex-wrap: wrap;
+}
+.flight-badge .airline { color: var(--teal-light); font-weight: 500; }
+.flight-badge .route { color: var(--white); }
+
+/* === SUMMARY CARDS === */
+.summary-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+.s-card {
+  flex: 1 1 140px;
+  background: var(--white-06);
+  border: 1px solid var(--white-12);
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-align: center;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.s-card:hover { transform: translateY(-3px); border-color: var(--teal); }
+.s-card .s-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--white-40);
+  margin-bottom: 6px;
+}
+.s-card .s-value {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--white);
+}
+
+/* === FOOTER === */
+.page-footer {
+  text-align: center;
+  padding: 48px 24px 32px;
+  border-top: 1px solid var(--white-08);
+}
+.page-footer p {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .content { padding: 40px 16px 60px; }
+  .timeline { padding-left: 36px; }
+  .tl-item { padding: 16px 18px; }
+  .tl-item::before { left: -27px; }
+  .tl-item.surf::before { left: -29px; }
+  .timeline::before { left: 8px; }
+  .summary-strip { gap: 8px; }
+  .s-card { padding: 12px 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="page-nav">
+  <a href="Index.html">← Volver</a>
+  <span class="nav-title">Operación Última Ola</span>
+  <a href="presupuesto.html">Presupuesto →</a>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="page-hero-content">
+    <p class="label">El plan · Abril – Mayo 2026</p>
+    <h1>Itinerario <span>completo</span></h1>
+    <p class="sub">11 días · 3 países de tránsito · 1 destino épico</p>
+    <div class="hero-divider"></div>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- SUMMARY -->
+  <div class="summary-strip">
+    <div class="s-card">
+      <div class="s-label">Salida</div>
+      <div class="s-value">23 Abril</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">Regreso</div>
+      <div class="s-value">3 Mayo</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">Duración</div>
+      <div class="s-value">11 días</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">Surf Camp</div>
+      <div class="s-value">8 noches</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">Vuelos</div>
+      <div class="s-value">4 tramos</div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+
+    <div class="tl-item flight reveal">
+      <div class="tl-date">Miércoles 23 de abril</div>
+      <div class="tl-title">Despegue desde Bilbao</div>
+      <div class="tl-desc">Comienza la aventura. Salimos de Loiu rumbo a Bali con escala en Estambul. Noche en el avión cruzando medio mundo.</div>
+      <div class="flight-badge">
+        <span class="airline">Turkish Airlines</span>
+        <span class="route">BIO → IST → DPS</span>
+        <span>18:20 → 19:05+1</span>
+        <span>18h 45min</span>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">Jueves 24 de abril</div>
+      <div class="tl-title">Llegada a Bali</div>
+      <div class="tl-desc">Aterrizamos en Denpasar a las 19:05. Noche de descanso en Bali para recuperar del vuelo y prepararnos para el salto a Sumba. Cena de bienvenida a Indonesia.</div>
+    </div>
+
+    <div class="tl-item flight reveal">
+      <div class="tl-date">Viernes 25 de abril</div>
+      <div class="tl-title">Salto a Sumba</div>
+      <div class="tl-desc">Vuelo directo Denpasar–Tambolaka. En poco más de una hora estamos en otro mundo. Traslado al Sumba Surf Camp y primera sesión de reconocimiento del spot.</div>
+      <div class="flight-badge">
+        <span class="airline">Batik Air</span>
+        <span class="route">DPS → TMC</span>
+        <span>09:40 → 10:55</span>
+        <span>1h 15min · Directo</span>
+      </div>
+    </div>
+
+    <div class="tl-item surf reveal">
+      <div class="tl-date">25 abril — 2 mayo · 8 noches</div>
+      <div class="tl-title">Sumba Surf Camp</div>
+      <div class="tl-desc">8 días de surf puro. Pensión completa. Olas perfectas sin crowds. Kerewe, una derecha de 500 metros rompiendo solo para nosotros. Esto es por lo que hemos venido. Desayuno, surf, comida, surf, cena, repetir.</div>
+    </div>
+
+    <div class="tl-item flight reveal">
+      <div class="tl-date">Viernes 2 de mayo</div>
+      <div class="tl-title">Regreso Sumba → Bali → Bilbao</div>
+      <div class="tl-desc">Vuelo de vuelta Tambolaka–Denpasar por la mañana. Horas libres en Bali. Conexión nocturna a Bilbao vía Estambul.</div>
+      <div class="flight-badge">
+        <span class="airline">Batik Air</span>
+        <span class="route">TMC → DPS</span>
+        <span>11:35 → 12:50</span>
+        <span>1h 15min · Directo</span>
+      </div>
+      <div class="flight-badge" style="margin-top:6px;">
+        <span class="airline">Turkish Airlines</span>
+        <span class="route">DPS → IST → BIO</span>
+        <span>20:45 → 11:10+1</span>
+        <span>20h 25min</span>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">Sábado 3 de mayo</div>
+      <div class="tl-title">Llegada a Bilbao</div>
+      <div class="tl-desc">Aterrizamos en Loiu a las 11:10 de la mañana. Fin de la Operación Última Ola. Vuelta a la realidad con las mejores historias de nuestra vida.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <p>Pepon Power Team · Operación Última Ola · Sumba 2026</p>
+</div>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.tl-item').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

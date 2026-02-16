@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sumba vs Maldivas · Operación Última Ola</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@1&family=Outfit:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0A1628;
+  --deep: #0F2847;
+  --ocean: #1A4A7A;
+  --teal: #00B4D8;
+  --teal-light: #48CAE4;
+  --teal-glow: rgba(0, 180, 216, 0.15);
+  --coral: #E07A5F;
+  --coral-bright: #F2946D;
+  --coral-glow: rgba(224, 122, 95, 0.2);
+  --sand: #F5DEB3;
+  --sand-light: #FFF8E7;
+  --gold: #D4A843;
+  --green: #4CAF50;
+  --green-glow: rgba(76, 175, 80, 0.15);
+  --red-soft: #E57373;
+  --white: #FFFFFF;
+  --white-70: rgba(255,255,255,0.7);
+  --white-40: rgba(255,255,255,0.4);
+  --white-15: rgba(255,255,255,0.15);
+  --white-08: rgba(255,255,255,0.08);
+  --white-06: rgba(255,255,255,0.06);
+  --white-12: rgba(255,255,255,0.12);
+  --white-20: rgba(255,255,255,0.2);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+
+/* === NAV === */
+.page-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 24px;
+  background: rgba(10, 22, 40, 0.92);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--white-08);
+}
+.page-nav a {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--white-40); text-decoration: none;
+  padding: 8px 14px; border-radius: 6px; border: 1px solid var(--white-15); transition: all 0.3s;
+}
+.page-nav a:hover { color: var(--white); border-color: var(--teal); background: var(--white-08); }
+.page-nav .nav-title {
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 12px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--coral);
+  border: none; padding: 0;
+}
+.page-nav .nav-title:hover { background: none; }
+
+/* === HERO === */
+.page-hero {
+  min-height: 50vh; display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 24px 60px; position: relative; overflow: hidden;
+  background: linear-gradient(180deg, var(--deep) 0%, var(--navy) 100%);
+}
+.page-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 600px 500px at 30% 50%, var(--teal-glow) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 500px at 70% 50%, rgba(229, 115, 115, 0.08) 0%, transparent 70%);
+}
+.page-hero-content { position: relative; z-index: 2; }
+.page-hero .label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--teal); margin-bottom: 20px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s; }
+.page-hero h1 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(36px, 7vw, 72px); line-height: 0.95; letter-spacing: -2px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s; }
+.page-hero h1 .vs { color: var(--white-40); font-size: 0.6em; }
+.page-hero h1 .winner { color: var(--teal-light); }
+.page-hero h1 .loser { color: var(--red-soft); }
+.page-hero .sub { font-family: 'Instrument Serif', serif; font-style: italic; font-size: clamp(16px, 3vw, 22px); color: var(--sand); margin-top: 16px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s; }
+.hero-divider { width: 60px; height: 3px; background: var(--coral); margin: 28px auto 0; opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s; }
+
+/* === CONTENT === */
+.content { max-width: 880px; margin: 0 auto; padding: 60px 24px 80px; }
+
+/* === COMPARISON CARDS === */
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.comp-card {
+  border-radius: 16px;
+  padding: 30px 26px;
+  position: relative;
+  overflow: hidden;
+}
+
+.comp-card.winner {
+  background: linear-gradient(135deg, var(--teal-glow) 0%, rgba(0,180,216,0.04) 100%);
+  border: 2px solid var(--teal);
+}
+.comp-card.loser {
+  background: var(--white-06);
+  border: 1px solid var(--white-12);
+  opacity: 0.75;
+}
+
+.comp-badge {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; padding: 6px 14px; border-radius: 20px;
+  display: inline-block; margin-bottom: 18px;
+}
+.comp-card.winner .comp-badge { background: var(--teal); color: white; }
+.comp-card.loser .comp-badge { background: var(--white-12); color: var(--white-40); }
+
+.comp-card-title {
+  font-family: 'Outfit', sans-serif; font-weight: 800;
+  font-size: 26px; color: var(--white); margin-bottom: 4px;
+}
+.comp-card.loser .comp-card-title { color: var(--white-40); }
+
+.comp-card-sub {
+  font-family: 'Instrument Serif', serif; font-style: italic;
+  font-size: 14px; color: var(--sand); margin-bottom: 22px;
+}
+.comp-card.loser .comp-card-sub { color: var(--white-40); }
+
+.comp-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 0; border-bottom: 1px solid var(--white-08); font-size: 13px;
+}
+.comp-row:last-of-type { border-bottom: none; }
+
+.comp-row .c-label { color: var(--white-40); }
+.comp-card.loser .comp-row .c-label { color: rgba(255,255,255,0.3); }
+
+.comp-row .c-val {
+  font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--white);
+}
+.comp-card.loser .comp-row .c-val { color: var(--white-40); }
+.comp-row .c-val.good { color: var(--green); }
+.comp-row .c-val.bad { color: var(--red-soft); }
+
+.comp-total {
+  margin-top: 18px; padding-top: 16px;
+  border-top: 2px solid var(--white-12);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.comp-total .ct-label {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--white-40);
+}
+.comp-total .ct-val {
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 30px; color: var(--white);
+}
+.comp-card.winner .comp-total .ct-val { color: var(--teal-light); }
+.comp-card.loser .comp-total .ct-val { color: var(--white-40); }
+
+/* === SAVINGS === */
+.savings {
+  text-align: center; padding: 22px;
+  background: linear-gradient(135deg, var(--green-glow) 0%, rgba(76,175,80,0.04) 100%);
+  border: 1px solid rgba(76,175,80,0.35); border-radius: 14px;
+  margin-bottom: 36px;
+}
+.savings .s-label {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--green); margin-bottom: 6px;
+}
+.savings .s-value {
+  font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 42px; color: var(--green);
+}
+
+/* === VERDICT === */
+.verdict {
+  padding: 28px;
+  background: var(--white-06);
+  border-left: 4px solid var(--teal);
+  border-radius: 0 14px 14px 0;
+}
+.verdict p {
+  font-size: 15px; color: var(--white-70); line-height: 1.8; margin-bottom: 12px;
+}
+.verdict p:last-child { margin-bottom: 0; }
+.verdict strong { color: var(--white); }
+
+/* === TABLE COMPARISON === */
+.table-comparison {
+  margin-top: 48px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--white-12);
+}
+.tc-header {
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0;
+  background: var(--deep);
+}
+.tc-header div {
+  padding: 14px 18px; font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--white-40);
+  border-bottom: 1px solid var(--white-12);
+}
+.tc-header div:nth-child(2) { color: var(--teal-light); text-align: center; border-left: 1px solid var(--white-08); }
+.tc-header div:nth-child(3) { color: var(--red-soft); text-align: center; border-left: 1px solid var(--white-08); }
+
+.tc-row {
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0;
+  background: var(--white-06); border-bottom: 1px solid var(--white-08);
+}
+.tc-row:last-child { border-bottom: none; }
+.tc-row:hover { background: var(--white-12); }
+.tc-row div {
+  padding: 13px 18px; font-size: 13px; color: var(--white-70);
+  display: flex; align-items: center;
+}
+.tc-row div:nth-child(1) { font-weight: 600; }
+.tc-row div:nth-child(2), .tc-row div:nth-child(3) { justify-content: center; border-left: 1px solid var(--white-08); font-family: 'DM Mono', monospace; font-size: 12px; }
+.tc-row div.win { color: var(--green); background: rgba(76,175,80,0.05); }
+.tc-row div.lose { color: var(--red-soft); opacity: 0.6; }
+
+.tc-total {
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0;
+  background: var(--deep);
+}
+.tc-total div {
+  padding: 16px 18px; font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: 18px; color: var(--white);
+}
+.tc-total div:nth-child(2) { text-align: center; color: var(--teal-light); border-left: 1px solid var(--white-08); }
+.tc-total div:nth-child(3) { text-align: center; color: var(--red-soft); border-left: 1px solid var(--white-08); }
+
+/* === FLAT DAY SECTION === */
+.section-divider {
+  text-align: center; padding: 64px 0 16px;
+}
+.section-divider .label {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--coral); margin-bottom: 14px;
+}
+.section-divider h2 {
+  font-family: 'Outfit', sans-serif; font-weight: 900;
+  font-size: clamp(24px, 5vw, 40px); line-height: 1.05; letter-spacing: -1px; color: var(--white);
+}
+.section-divider h2 em {
+  font-family: 'Instrument Serif', serif; font-style: italic; color: var(--sand); font-weight: 400;
+}
+.section-divider .sub {
+  font-size: 15px; color: var(--white-40); margin-top: 10px; max-width: 560px; margin-left: auto; margin-right: auto;
+}
+.sd-line { width: 50px; height: 3px; background: var(--coral); margin: 20px auto 0; border-radius: 2px; }
+
+/* Gaadhoo warning */
+.gaadhoo-warning {
+  margin-top: 32px; padding: 28px 28px 24px;
+  background: linear-gradient(135deg, rgba(229,115,115,0.08) 0%, rgba(229,115,115,0.02) 100%);
+  border: 1px solid rgba(229,115,115,0.25); border-left: 4px solid var(--red-soft);
+  border-radius: 0 14px 14px 0;
+}
+.gaadhoo-warning .gw-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+}
+.gaadhoo-warning .gw-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: rgba(229,115,115,0.15); display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.gaadhoo-warning .gw-title {
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 18px; color: var(--red-soft);
+}
+.gaadhoo-warning .gw-sub {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: rgba(229,115,115,0.6);
+}
+.gaadhoo-warning p {
+  font-size: 14px; color: var(--white-70); line-height: 1.8; margin-bottom: 10px;
+}
+.gaadhoo-warning p:last-child { margin-bottom: 0; }
+.gaadhoo-warning strong { color: var(--white); }
+.gaadhoo-warning .gw-quote {
+  margin-top: 16px; padding: 14px 18px;
+  background: rgba(229,115,115,0.06); border-radius: 10px;
+  font-family: 'Instrument Serif', serif; font-style: italic;
+  font-size: 16px; color: var(--sand); line-height: 1.6;
+}
+
+.gaadhoo-facts {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px;
+}
+.gf-item {
+  text-align: center; padding: 14px 10px;
+  background: rgba(229,115,115,0.06); border-radius: 10px;
+  border: 1px solid rgba(229,115,115,0.12);
+}
+.gf-item .gf-val {
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 22px; color: var(--red-soft);
+}
+.gf-item .gf-label {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--white-40); margin-top: 4px;
+}
+
+/* Sumba activities */
+.sumba-activities-header {
+  margin-top: 48px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px;
+}
+.sa-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: var(--teal-glow); border: 1px solid rgba(0,180,216,0.3);
+  display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+}
+.sa-text .sa-title {
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; color: var(--teal-light);
+}
+.sa-text .sa-sub {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--white-40);
+}
+
+.activities-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+.act-card {
+  padding: 20px; border-radius: 14px;
+  background: var(--white-06); border: 1px solid var(--white-08);
+  transition: border-color 0.3s, background 0.3s;
+}
+.act-card:hover { border-color: var(--teal); background: var(--white-08); }
+.act-card .act-icon { font-size: 28px; margin-bottom: 10px; }
+.act-card .act-name {
+  font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px;
+  color: var(--white); margin-bottom: 4px;
+}
+.act-card .act-desc {
+  font-size: 12px; color: var(--white-40); line-height: 1.6;
+}
+.act-card .act-time {
+  margin-top: 8px; font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; color: var(--teal); text-transform: uppercase;
+}
+
+/* Flat day comparison table */
+.flatday-table {
+  margin-top: 32px; border-radius: 14px; overflow: hidden; border: 1px solid var(--white-12);
+}
+.ft-header {
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0; background: var(--deep);
+}
+.ft-header div {
+  padding: 14px 18px; font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--white-40);
+  border-bottom: 1px solid var(--white-12);
+}
+.ft-header div:nth-child(2) { color: var(--teal-light); text-align: center; border-left: 1px solid var(--white-08); }
+.ft-header div:nth-child(3) { color: var(--red-soft); text-align: center; border-left: 1px solid var(--white-08); }
+.ft-row {
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0;
+  background: var(--white-06); border-bottom: 1px solid var(--white-08);
+}
+.ft-row:last-child { border-bottom: none; }
+.ft-row:hover { background: var(--white-12); }
+.ft-row div {
+  padding: 12px 18px; font-size: 13px; color: var(--white-70); display: flex; align-items: center;
+}
+.ft-row div:nth-child(1) { font-weight: 600; }
+.ft-row div:nth-child(2), .ft-row div:nth-child(3) {
+  justify-content: center; border-left: 1px solid var(--white-08);
+  font-family: 'DM Mono', monospace; font-size: 12px;
+}
+.ft-row div.win { color: var(--green); background: rgba(76,175,80,0.05); }
+.ft-row div.lose { color: var(--red-soft); opacity: 0.6; }
+
+.flatday-total {
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0; background: var(--deep);
+}
+.flatday-total div {
+  padding: 16px 18px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: var(--white);
+}
+.flatday-total div:nth-child(2) { text-align: center; color: var(--teal-light); border-left: 1px solid var(--white-08); }
+.flatday-total div:nth-child(3) { text-align: center; color: var(--red-soft); border-left: 1px solid var(--white-08); }
+
+@media (max-width: 700px) {
+  .activities-grid { grid-template-columns: 1fr; }
+  .gaadhoo-facts { grid-template-columns: 1fr; }
+  .ft-header, .ft-row, .flatday-total { grid-template-columns: 1.5fr 1fr 1fr; }
+  .ft-row div, .ft-header div, .flatday-total div { padding: 10px 10px; font-size: 11px; }
+}
+
+/* === FOOTER === */
+.page-footer { text-align: center; padding: 48px 24px 32px; border-top: 1px solid var(--white-08); }
+.page-footer p { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--white-40); letter-spacing: 3px; text-transform: uppercase; }
+
+/* === ANIMATIONS === */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.12s; } .reveal-d2 { transition-delay: 0.24s; }
+
+@media (max-width: 700px) {
+  .content { padding: 40px 16px 60px; }
+  .comp-grid { grid-template-columns: 1fr; }
+  .comp-card.loser { order: 2; }
+  .tc-header, .tc-row, .tc-total { grid-template-columns: 1.5fr 1fr 1fr; }
+  .tc-row div, .tc-header div, .tc-total div { padding: 10px 12px; font-size: 11px; }
+  .savings .s-value { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a href="Index.html">← Volver</a>
+  <span class="nav-title">Operación Última Ola</span>
+  <a href="presupuesto.html">Presupuesto →</a>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <p class="label">La comparativa definitiva</p>
+    <h1><span class="winner">Sumba</span> <span class="vs">vs</span> <span class="loser">Maldivas</span></h1>
+    <p class="sub">Por qué Sumba es mejor en absolutamente todo</p>
+    <div class="hero-divider"></div>
+  </div>
+</section>
+
+<div class="content">
+
+  <!-- CARDS -->
+  <div class="comp-grid reveal">
+    <div class="comp-card winner">
+      <div class="comp-badge">Ganador absoluto</div>
+      <div class="comp-card-title">Sumba Surf Camp</div>
+      <div class="comp-card-sub">Indonesia · Isla de Sumba</div>
+      <div class="comp-row"><span class="c-label">Vuelos</span><span class="c-val">1.177 €</span></div>
+      <div class="comp-row"><span class="c-label">Estancia (8 noches)</span><span class="c-val good">1.160 €</span></div>
+      <div class="comp-row"><span class="c-label">Régimen</span><span class="c-val good">Pensión completa</span></div>
+      <div class="comp-row"><span class="c-label">Salidas de surf</span><span class="c-val good">Ilimitadas</span></div>
+      <div class="comp-row"><span class="c-label">Crowds</span><span class="c-val good">Casi nulos</span></div>
+      <div class="comp-row"><span class="c-label">Olas</span><span class="c-val good">Kerewe 500m</span></div>
+      <div class="comp-row"><span class="c-label">Días sin olas</span><span class="c-val good">15+ actividades</span></div>
+      <div class="comp-total"><span class="ct-label">Total / persona</span><span class="ct-val">~2.632 €</span></div>
+    </div>
+
+    <div class="comp-card loser">
+      <div class="comp-badge">Descartado</div>
+      <div class="comp-card-title">Surfari Maldivas Sur</div>
+      <div class="comp-card-sub">Maldivas · Isla de Gaadhoo (deshabitada)</div>
+      <div class="comp-row"><span class="c-label">Vuelos</span><span class="c-val">~1.100 €</span></div>
+      <div class="comp-row"><span class="c-label">Estancia</span><span class="c-val bad">2.250 €</span></div>
+      <div class="comp-row"><span class="c-label">Régimen</span><span class="c-val">Variable</span></div>
+      <div class="comp-row"><span class="c-label">Salidas de surf</span><span class="c-val bad">Solo 3 en barco</span></div>
+      <div class="comp-row"><span class="c-label">Crowds</span><span class="c-val bad">Muchos barcos</span></div>
+      <div class="comp-row"><span class="c-label">Olas</span><span class="c-val">Buenas pero masificadas</span></div>
+      <div class="comp-row"><span class="c-label">Días sin olas</span><span class="c-val bad">Snorkel o leer</span></div>
+      <div class="comp-total"><span class="ct-label">Total / persona</span><span class="ct-val">~3.350 €</span></div>
+    </div>
+  </div>
+
+  <!-- SAVINGS -->
+  <div class="savings reveal">
+    <div class="s-label">Ahorro por persona eligiendo Sumba</div>
+    <div class="s-value">+ 718 €</div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-comparison reveal">
+    <div class="tc-header">
+      <div>Concepto</div>
+      <div>Sumba</div>
+      <div>Maldivas</div>
+    </div>
+    <div class="tc-row">
+      <div>Precio vuelos</div>
+      <div class="win">1.177 €</div>
+      <div>~1.100 €</div>
+    </div>
+    <div class="tc-row">
+      <div>Precio estancia</div>
+      <div class="win">1.160 €</div>
+      <div class="lose">2.250 €</div>
+    </div>
+    <div class="tc-row">
+      <div>Pensión completa</div>
+      <div class="win">Incluida</div>
+      <div class="lose">No incluida</div>
+    </div>
+    <div class="tc-row">
+      <div>Sesiones de surf</div>
+      <div class="win">Ilimitadas</div>
+      <div class="lose">3 salidas barco</div>
+    </div>
+    <div class="tc-row">
+      <div>Crowds en el agua</div>
+      <div class="win">Casi cero</div>
+      <div class="lose">Saturado</div>
+    </div>
+    <div class="tc-row">
+      <div>Acceso a olas</div>
+      <div class="win">Desde la orilla</div>
+      <div class="lose">Solo en barco</div>
+    </div>
+    <div class="tc-row">
+      <div>Autonomía</div>
+      <div class="win">Total</div>
+      <div class="lose">Dependes del barco</div>
+    </div>
+    <div class="tc-row">
+      <div>Días sin olas</div>
+      <div class="win">15+ actividades</div>
+      <div class="lose">Isla deshabitada</div>
+    </div>
+    <div class="tc-total">
+      <div>Total / persona</div>
+      <div>~2.632 €</div>
+      <div>~3.350 €</div>
+    </div>
+  </div>
+
+  <!-- FLAT DAY SECTION -->
+  <div class="section-divider reveal" style="margin-top:56px;">
+    <p class="label">El factor decisivo</p>
+    <h2>¿Y si no <em>hay olas?</em></h2>
+    <p class="sub">En un surf trip siempre pueden venir días sin swell. Lo que haces esos días define el viaje.</p>
+    <div class="sd-line"></div>
+  </div>
+
+  <!-- GAADHOO WARNING -->
+  <div class="gaadhoo-warning reveal">
+    <div class="gw-header">
+      <div class="gw-icon">🏝️</div>
+      <div>
+        <div class="gw-title">Gaadhoo, Maldivas</div>
+        <div class="gw-sub">Isla deshabitada · Laamu Atoll</div>
+      </div>
+    </div>
+    <p>En Maldivas estaríamos en la <strong>isla de Gaadhoo</strong>, en el atolón de Laamu. Gaadhoo es una isla deshabitada: <strong>sus 174 habitantes fueron reubicados en 2015</strong>. No hay guesthouses, restaurantes, tiendas ni operadores de actividades.</p>
+    <p>Maldivas es el <strong>país más plano del planeta</strong> — la elevación máxima natural son 2,4 metros. No hay montañas, ni cascadas, ni ríos, ni bosques. La isla se recorre caminando en menos de una hora. Si el mar se pone plano o el viento no acompaña, las opciones se reducen drásticamente.</p>
+    <p>Lo que ofrece Gaadhoo: snorkel en su arrecife (39 géneros de coral), un sitio de buceo con tiburones grises y rayas águila, y una playa de anidación de tortugas verdes. En el atolón de Laamu hay poco más: ruinas budistas enterradas en Gan, un lago de manglares, y una carretera de 18 km que conecta islas.</p>
+
+    <div class="gaadhoo-facts">
+      <div class="gf-item"><div class="gf-val">0</div><div class="gf-label">Habitantes</div></div>
+      <div class="gf-item"><div class="gf-val">2,4m</div><div class="gf-label">Elevación máxima</div></div>
+      <div class="gf-item"><div class="gf-val">~1 km²</div><div class="gf-label">Superficie</div></div>
+    </div>
+
+    <div class="gw-quote">"Si se pone plano o hay demasiado viento, realmente no hay mucho que hacer. Prepárate para leer bastante."<br><span style="font-family:'DM Mono',monospace; font-size:10px; font-style:normal; color:var(--white-40); letter-spacing:1px;">— SURFERS EXPERIMENTADOS EN MALDIVAS</span></div>
+  </div>
+
+  <!-- SUMBA ACTIVITIES -->
+  <div class="sumba-activities-header reveal">
+    <div class="sa-icon">🌋</div>
+    <div class="sa-text">
+      <div class="sa-title">Sumba: un día sin olas = un día de aventura</div>
+      <div class="sa-sub">11.000 km² de isla por explorar desde Kerewe</div>
+    </div>
+  </div>
+
+  <div class="activities-grid">
+    <div class="act-card reveal">
+      <div class="act-icon">🏇</div>
+      <div class="act-name">Rutas a caballo por la playa</div>
+      <div class="act-desc">Sumba es famosa por sus caballos Sandalwood. Puedes cabalgar al atardecer por playas desiertas o incluso nadar con los caballos en el mar.</div>
+      <div class="act-time">15–20 min desde el camp</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">💧</div>
+      <div class="act-name">Cascada de Lapopu (90m)</div>
+      <div class="act-desc">Cascada de 90 metros en el Parque Nacional Manupeu Tanah Daru. Piscina natural de agua cristalina en un cañón cubierto de musgo.</div>
+      <div class="act-time">1–1,5h en moto</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">🪦</div>
+      <div class="act-name">Aldeas megalíticas</div>
+      <div class="act-desc">Sumba es el último lugar del planeta donde se siguen construyendo tumbas megalíticas. Ratenggaro tiene casas ancestrales frente al océano con tumbas de piedra tallada.</div>
+      <div class="act-time">1–1,5h hasta Ratenggaro</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">🏍️</div>
+      <div class="act-name">Explorar en moto</div>
+      <div class="act-desc">Alquilar una moto por ~5 €/día y recorrer arrozales, colinas, pueblos tradicionales y costa salvaje. Rutas épicas en todas direcciones desde Kerewe.</div>
+      <div class="act-time">Desde el camp</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">🏊</div>
+      <div class="act-name">Laguna de Weekuri</div>
+      <div class="act-desc">Laguna de agua salada turquesa protegida por un arrecife de barrera. Perfecta para nadar y hacer snorkel en aguas cristalinas y calmadas.</div>
+      <div class="act-time">1,5–2h en moto</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">🧵</div>
+      <div class="act-name">Tejido Ikat tradicional</div>
+      <div class="act-desc">Visitar aldeas donde las mujeres tejen a mano textiles con tintes naturales (índigo, raíces, minerales). Motivos de caballos, calaveras y ancestros. Se puede comprar directo.</div>
+      <div class="act-time">~1h hasta Praijing</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">🎣</div>
+      <div class="act-name">Pesca en jukung</div>
+      <div class="act-desc">Salir con pescadores locales en canoas outrigger tradicionales con sedal. O usar el speedboat del camp para pesca deportiva: atún, GT, peces de arrecife.</div>
+      <div class="act-time">Desde la costa del camp</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">🦜</div>
+      <div class="act-name">Birdwatching & Parque Nacional</div>
+      <div class="act-desc">200+ especies de aves, 9 endémicas (cacatúa crestada de limón). Parque Nacional Manupeu Tanah Daru con macacos, pitones y bosque tropical virgen.</div>
+      <div class="act-time">1–1,5h en moto</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">🏖️</div>
+      <div class="act-name">Playas y calas secretas</div>
+      <div class="act-desc">Marosi Beach a 15 min caminando, Watubella con acantilados blancos y cuevas, Mandorak con snorkel increíble. Todas desiertas.</div>
+      <div class="act-time">15 min – 2h</div>
+    </div>
+    <div class="act-card reveal">
+      <div class="act-icon">🌾</div>
+      <div class="act-name">Arrozales y vida local</div>
+      <div class="act-desc">Caminar por los arrozales de Lamboya en época de siembra, visitar mercados locales en Waikabubak, interactuar con la gente de los pueblos.</div>
+      <div class="act-time">15–60 min</div>
+    </div>
+  </div>
+
+  <!-- FLAT DAY COMPARISON TABLE -->
+  <div class="flatday-table reveal" style="margin-top:36px;">
+    <div class="ft-header">
+      <div>Días sin olas</div>
+      <div>Sumba</div>
+      <div>Gaadhoo</div>
+    </div>
+    <div class="ft-row">
+      <div>Superficie a explorar</div>
+      <div class="win">11.000 km²</div>
+      <div class="lose">~1 km²</div>
+    </div>
+    <div class="ft-row">
+      <div>Cascadas</div>
+      <div class="win">5+ (hasta 90m)</div>
+      <div class="lose">No existen</div>
+    </div>
+    <div class="ft-row">
+      <div>Aldeas culturales</div>
+      <div class="win">10+ accesibles</div>
+      <div class="lose">Deshabitada</div>
+    </div>
+    <div class="ft-row">
+      <div>Montar a caballo</div>
+      <div class="win">Cultura ecuestre</div>
+      <div class="lose">Imposible</div>
+    </div>
+    <div class="ft-row">
+      <div>Exploración terrestre</div>
+      <div class="win">Días de rutas en moto</div>
+      <div class="lose">30 min caminando</div>
+    </div>
+    <div class="ft-row">
+      <div>Artesanía / cultura</div>
+      <div class="win">Ikat, ceremonias, tumbas</div>
+      <div class="lose">Nada accesible</div>
+    </div>
+    <div class="ft-row">
+      <div>Naturaleza terrestre</div>
+      <div class="win">P. Nacional, aves endémicas</div>
+      <div class="lose">Plano (máx 2,4m)</div>
+    </div>
+    <div class="ft-row">
+      <div>Snorkel / buceo</div>
+      <div class="win">Bueno</div>
+      <div>Excelente</div>
+    </div>
+    <div class="flatday-total">
+      <div>Categorías de actividad</div>
+      <div>15+</div>
+      <div>3</div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="verdict reveal" style="margin-top:36px;">
+    <p><strong>Sumba gana por goleada.</strong> Pagamos casi 720 € menos por persona y obtenemos una experiencia infinitamente mejor: pensión completa incluida, surf ilimitado todos los días frente al camp, y olas sin crowds en una isla virgen.</p>
+    <p>En Maldivas pagas 2.250 € solo por la estancia y te dan <strong>3 salidas en barco</strong> en todo el viaje. Tres. El resto del tiempo estás en el barco mirando el horizonte. Además, los spots de Maldivas están cada vez más saturados de barcos charter.</p>
+    <p>Y el argumento definitivo: <strong>si no hay olas, en Gaadhoo no hay nada.</strong> Una isla deshabitada, plana, sin infraestructura. En Sumba tienes cascadas de 90 metros, aldeas megalíticas, caballos en la playa, arrozales infinitos y rutas en moto para llenar semanas enteras. Riesgo cero de días perdidos.</p>
+    <p>La decisión no es difícil: <strong>más surf, más aventura, menos gente, mejor precio.</strong> Sumba.</p>
+  </div>
+
+</div>
+
+<div class="page-footer"><p>Pepon Power Team · Operación Última Ola · Sumba 2026</p></div>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
